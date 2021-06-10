@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>썬더 데모</title>
+    <!-- 썬더: 기본 스타일 -->
+    <link rel="stylesheet" href="../dist/theme/basic/style.min.css">
+</head>
+<body>
+
+<!-- 상품 그리드가 <div> 안에 마법같이 렌더링됩니다. -->
+<div data-thunder-render="product-list"></div>
+
+<!-- 클릭하면 상품 그리드가 오버레이 창으로 열립니다. -->
+<button data-thunder-open="product-list">클릭해보세요</button>
+
+
+<!-- jQuery: 이미 jQuery 사용시 생략 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<!-- 썬더: 코어 스크립트 -->
+<script src="../dist/thunder.js"></script>
+<script src="../dist/theme/basic/templates.min.js"></script>
+<script src="../dist/locales/ko.js"></script>
+
+<!-- 썬더: 설정 및 실행 코드 -->
+<script>
+    Thunder({
+        header: true,            // 사이트에 헤더를 추가합니다.
+        client: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyZjkwOGUyZWIxMzQ5OGUwMTQ1ZjJjYjI0YjIyNTk2OTQ2YWFiZjU4ZmI5MzI2NDVmMTk4YWJmZDk1ODFiYWYiLCJyb2xlIjoiY2xpZW50IiwiaWF0IjoxNjE5MTQ1MzE1LCJzdG9yZSI6IlZBUUQ3WUFXQUxOTi5ZOEQ1UzI3MlJQUDQiLCJzdWIiOiJUR0ZETjI1Uzc1QjkifQ.JBwWwbqKQKTIOoTEHTT9TIUFtcivAr0J1vCWWuuEM50' // 이전에 생성한 토큰을 <client-token> 대신 입력해주세요.
+    });
+</script>
+
+</body>
+</html>

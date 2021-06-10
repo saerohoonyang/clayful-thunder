@@ -39,6 +39,12 @@
 				</p>
 				{{? }}
 
+				{{? it.options.showCartButton }}
+				<p>
+				  <button class="thunder--add-to-cart">장바구니</button>
+				</p>
+				{{?}}
+
 			</div>
 
 			{{? product.label }}

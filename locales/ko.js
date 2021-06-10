@@ -334,6 +334,10 @@
 			labelUnavailable:  'UNAVAILABLE',
 			labelSoldOut:      'SOLD OUT',
 			labelDiscounted:   'SALE',
+            itemsExceeded:                     '카트에 담을 수 있는 수량을 초과했습니다.',
+            itemAddFailed:                     '카트 담기에 실패했습니다.',
+            itemAddSuccess:                    '카트에 성공적으로 담았습니다.',
+
 		},
 		'product-detail': {
 			quantity:                          '수량',

@@ -20,7 +20,11 @@ module.exports = Thunder => {
 			Thunder.options.productReviewRating
 		),
 		showComparePrice: true,  // Show `product.price.original`
+        showCartButton:     true,   // Show an add to cart button
 		usePagination:    true,  // Use pagination?
+        onItemAdd: function($container, context) {
+            return Thunder.notify('success', context.m('itemAddSuccess'));
+        },
 		onViewProduct: function($container, context, productId) {
 			return Thunder.open('product-detail', {
 				product: productId
@@ -117,9 +121,12 @@ module.exports = Thunder => {
 
 		const $container = $(this);
 		const $product = $(this).find('.thunder--product');
+        const $addToCart = $(this).find('.thunder--add-to-cart');
 		const $pagination = $(this).find('.thunder--product-list-pagination');
 
-		$product.on('click', [
+        const addToCartSpinner = Thunder.util.makeAsyncButton($addToCart);
+
+        $product.on('click', [
 			'.thunder--product-thumbnail-wrapper',
 			'.thunder--product-name',
 			'.thunder--product-summary',
@@ -130,7 +137,9 @@ module.exports = Thunder => {
 			$(event.delegateTarget).data('product')
 		));
 
-		if (context.options.usePagination) {
+        $addToCart.on('click', () => addToCart());
+
+        if (context.options.usePagination) {
 
 			Thunder.plugins.pagination({
 				container:     $pagination,
@@ -144,6 +153,88 @@ module.exports = Thunder => {
 				)
 			});
 		}
+
+        function addToCart(success) {
+            const item = buildItemData();
+
+            success = success || (() => {
+
+                Thunder.execute(
+                    context.options.onItemAdd,
+                    $container,
+                    context
+                );
+
+            });
+
+            const errors = {
+                'items-exceeded': context.m('itemsExceeded'),
+                default:          context.m('itemAddFailed'),
+            };
+
+            return Thunder.request({
+                method: 'POST',
+                url:    '/v1/customers/VY6BEFBJX7RU/cart/items',
+                data:   item
+            }).then(item => {
+                addToCartSpinner.done();
+                return success(item);
+            }, err => console.log("Error"));
+
+            // Thunder.Cart.addItem(item, err => {
+            //
+            //     if (err) {
+            //         addToCartSpinner.done();
+            //         return Thunder.notify('error', errors[err.code || 'default'] || errors.default);
+            //     }
+            //
+            //     addToCartSpinner.done();
+            //     return success(item);
+            // });
+
+            // if (Thunder.authenticated()) {
+            //
+            //     return Thunder.request({
+            //         method: 'POST',
+            //         url:    '/v1/me/cart/items',
+            //         data:   item
+            //     }).then(item => {
+            //         addToCartSpinner.done();
+            //         return success(item);
+            //     }, err => console.log("Error"));
+            //
+            // } else {
+            //
+            //     Thunder.Cart.addItem(item, err => {
+            //
+            //         if (err) {
+            //             addToCartSpinner.done();
+            //             return Thunder.notify('error', errors[err.code || 'default'] || errors.default);
+            //         }
+            //
+            //         addToCartSpinner.done();
+            //         return success(item);
+            //     });
+            // }
+        }
+
+        function buildItemData() {
+
+            const shippingMethod = '2J4JDYZBJ9H9';
+            const bundleItems = [];
+
+            const itemQuantity = 1;
+            const variant = null;
+
+            return {
+                product:        $product._id,
+                variant:        variant,
+                shippingMethod: shippingMethod,
+                quantity:       itemQuantity ? parseInt(itemQuantity) : null,
+                bundleItems:    bundleItems
+            };
+
+        }
 
 	};
 
